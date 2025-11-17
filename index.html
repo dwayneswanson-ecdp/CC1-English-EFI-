@@ -473,7 +473,7 @@ function randomizeQuestionOrder() {
       confirmSec.style.display = "block";
     });
 
-    // ----- Confirm page buttons -----
+    // ----- Confirm page: begin exam -----
     function beginExam() {
       // Get latest values
       const firstName = (studentFirstNameInput.value || "").trim();
@@ -494,15 +494,17 @@ function randomizeQuestionOrder() {
       partA.classList.add("active");
       partB.classList.remove("active");
 
-  // Mark exam as active
-  examActive = true;
+      // Mark exam as active
+      examActive = true;
 
-   // Anti-cheat & timer & shuffle
-enableFullScreen();
-startTimer();
-randomizeQuestionOrder();       // NEW — shuffle the 10 questions
-randomizeSelectsKeepFirst();    // existing — shuffle dropdown options
+      // Anti-cheat & timer & shuffle
+      enableFullScreen();
+      startTimer();
+      randomizeQuestionOrder();       // NEW — shuffle the 10 questions
+      randomizeSelectsKeepFirst();    // existing — shuffle dropdown options
+    }
 
+    // ----- Confirm page buttons -----
     confirmBackBtn.addEventListener("click", () => {
       confirmSec.style.display = "none";
       login.style.display = "block";
