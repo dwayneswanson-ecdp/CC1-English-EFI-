@@ -427,15 +427,16 @@ function ensureQuill() {
   }, 1000);
 }
 
-    function enableFullScreen() {
+ function enableFullScreen() {
   if (document.documentElement.requestFullscreen) {
     document.documentElement.requestFullscreen().catch(() => {});
 
     document.addEventListener("fullscreenchange", () => {
-      if (!document.fullscreenElement && examActive) {
+      if (!document.fullscreenElement) {
+        // As soon as we LEAVE fullscreen, reset the exam
         terminateExam("Vous avez quitté le mode plein écran. Vous devez recommencer l'épreuve.");
       }
-    });
+    }, { once: true });
   }
 }
 
