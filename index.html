@@ -315,8 +315,8 @@ Requirements:
     });
 
     // Timer
-    let timeLeft = 40 * 60;
-    let timer;
+  let examDeadline = null; // timestamp (ms) when 40 minutes are over
+let timer;
 
     // NEW: flag to avoid duplicate submissions
     let examSubmitted = false;
@@ -405,17 +405,27 @@ function ensureQuill() {
   }
 }
     
-    function startTimer() {
-      timer = setInterval(() => {
-        timeLeft--;
-        const m = Math.floor(timeLeft / 60), s = timeLeft % 60;
-        timerDisplay.textContent = `Time Remaining: ${m}:${s.toString().padStart(2,"0")}`;
-        if (timeLeft <= 0) {
-          clearInterval(timer);
-          submitExam();
-        }
-      }, 1000);
+   function startTimer() {
+  clearInterval(timer);
+
+  timer = setInterval(() => {
+    if (!examDeadline) return;
+
+    const now = Date.now();
+    const remainingMs = examDeadline - now;
+    const totalSec = Math.max(0, Math.floor(remainingMs / 1000));
+    const m = Math.floor(totalSec / 60);
+    const s = totalSec % 60;
+
+    timerDisplay.textContent = `Time Remaining: ${m}:${s.toString().padStart(2, "0")}`;
+
+    if (remainingMs <= 0) {
+      clearInterval(timer);
+      // time is over → force submission (or termination if you prefer)
+      submitExam();
     }
+  }, 1000);
+}
 
     function enableFullScreen() {
   if (document.documentElement.requestFullscreen) {
@@ -434,7 +444,7 @@ function ensureQuill() {
 
   examActive = false;
   clearInterval(timer);
-  timeLeft = 40 * 60; // reset timer
+
 
   alert(message || "Vous avez quitté l'écran de l'épreuve. Vous devez recommencer.");
 
@@ -543,6 +553,20 @@ function randomizeQuestionOrder() {
       // Mark exam as active
       examActive = true;
 
+      // If this is the first time, set the deadline to now + 40 minutes
+if (!examDeadline) {
+  examDeadline = Date.now() + 40 * 60 * 1000;
+}
+
+// If they try to start after the deadline, block it
+if (Date.now() > examDeadline) {
+  alert("Le délai de 40 minutes est écoulé. Vous ne pouvez plus commencer ou reprendre l'épreuve.");
+  examActive = false;
+  exam.style.display = "none";
+  login.style.display = "block";
+  return;
+}
+      
       // Anti-cheat & timer & shuffle
       enableFullScreen();
       startTimer();
@@ -595,7 +619,12 @@ function randomizeQuestionOrder() {
       const fd = new FormData(form);
       const name  = fd.get("studentName")  || document.getElementById("studentNameField").value;
       const email = fd.get("studentEmail") || document.getElementById("studentEmailField").value;
-      const minutesUsed = 40 - Math.floor(timeLeft / 60);
+      let minutesUsed = 40;
+if (examDeadline) {
+  const remainingMs = examDeadline - Date.now();
+  const remainingMin = Math.max(0, Math.floor(remainingMs / 60000));
+  minutesUsed = 40 - remainingMin;
+}
 
       const emailHtml = quill ? quill.root.innerHTML.trim() : "<em>(No response)</em>";
       const totalQs = document.querySelectorAll('#partA select[name^="q"]').length || 10;
