@@ -119,15 +119,15 @@
         <!-- LOGIN -->
     <section id="login" class="card">
       <h2>Commencer l'épreuve</h2>
-      <p>Merci de renseigner tes informations pour commencer. Une fois l'épreuve lancée, tu auras <b>40 minutes</b>.</p>
+      <p>Merci de renseigner vos informations pour commencer. Une fois l’épreuve lancée, vous disposerez de <b>40 minutes</b> pour la compléter.</p>
 
       <label>Nom et prénom :</label>
       <div class="name-row">
         <div class="field">
-          <input type="text" id="studentFirstName" placeholder="Prénom" required>
+          <input type="text" id="studentLastName" class="upper" placeholder="NOM (en majuscules)" required>
         </div>
         <div class="field">
-          <input type="text" id="studentLastName" class="upper" placeholder="NOM (en majuscules)" required>
+          <input type="text" id="studentFirstName" placeholder="Prénom" required>
         </div>
       </div>
 
@@ -144,12 +144,11 @@
 
     <!-- CONFIRM -->
     <section id="confirm" class="card">
-      <h2>Confirme tes informations</h2>
+      <h2>Veuillez confirmer vos informations</h2>
       <p><b>Nom &amp; prénom :</b> <span id="confirmName"></span></p>
       <p><b>Email :</b> <span id="confirmEmail"></span></p>
       <p class="muted">
-        Vérifie bien que ces informations sont correctes. Si quelque chose est incorrect,
-        clique sur « Modifier » pour revenir à l'écran précédent.
+        Veuillez vérifier que ces informations sont correctes. Si quelque chose ne l’est pas, cliquez sur « Modifier » pour revenir à l’écran précédent.
       </p>
       <div class="btn-row">
         <button type="button" class="btn-light" id="confirmBackBtn">← Modifier</button>
