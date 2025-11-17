@@ -439,33 +439,31 @@ function ensureQuill() {
   }
 }
 
-  function terminateExam(message) {
-  if (!examActive) return; // nothing to do if not in an active exam
-
-  examActive = false;
+function terminateExam(message) {
+  // Stop the timer (if any)
   clearInterval(timer);
 
-
+  // Show message once
   alert(message || "Vous avez quitté l'écran de l'épreuve. Vous devez recommencer.");
 
-  // 🔄 Clear all answers in the form (Part A + hidden fields)
+  // Clear all answers in the form (Part A + hidden fields)
   if (form) {
     form.reset();
   }
 
-  // 🧹 Clear the Quill editor content (Part B)
+  // Clear the Quill editor content (Part B)
   if (quill) {
-    // Completely clear the document
-    quill.setText("");            // or quill.setContents([{ insert: "\n" }]);
+    quill.setText("");  // fully blank
   }
 
-  // (Optional) also reset the duplicate-submission flag
+  // Reset flags
+  examActive = false;
   examSubmitted = false;
 
-  // Reset UI: back to login
-  exam.style.display = "none";
-  confirmSec.style.display = "none";
-  login.style.display = "block";
+  // Reset UI: ONLY the login card visible
+  if (exam)      exam.style.display = "none";
+  if (confirmSec) confirmSec.style.display = "none";
+  if (login)     login.style.display = "block";
 
   // Re-enable submit button if it was disabled
   if (submitBtn) {
