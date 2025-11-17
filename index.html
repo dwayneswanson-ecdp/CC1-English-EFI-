@@ -356,54 +356,54 @@ window.addEventListener("blur", () => {
       "Liability","Consolidation","Impairment","Stakeholder","Compliance"
     ];
 
-    // Lazy Quill
-    let quill = null;
-    function ensureQuill() {
-      if (!quill) {
-        quill = new Quill('#editor', {
-          theme: 'snow',
-          modules: {
-            toolbar: [
-              ['bold','italic','underline'],
-              [{ list: 'ordered' }, { list: 'bullet' }],
-              ['clean']
-            ]
-          }
-        });
+// Lazy Quill
+let quill = null;
+function ensureQuill() {
+  if (!quill) {
+    quill = new Quill('#editor', {
+      theme: 'snow',
+      modules: {
+        toolbar: [
+          ['bold','italic','underline'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['clean']
+        ]
       }
-    }
+    });
 
-    // Disable ALL right-click + context menu inside editor
-quill.root.addEventListener("contextmenu", (e) => {
-  e.preventDefault();
-});
+    // 🔒 Disable ALL right-click + context menu inside editor
+    quill.root.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    });
 
-// Disable paste
-quill.root.addEventListener("paste", (e) => {
-  e.preventDefault();
-});
+    // 🔒 Disable paste
+    quill.root.addEventListener("paste", (e) => {
+      e.preventDefault();
+    });
 
-// Disable copy
-quill.root.addEventListener("copy", (e) => {
-  e.preventDefault();
-});
+    // 🔒 Disable copy
+    quill.root.addEventListener("copy", (e) => {
+      e.preventDefault();
+    });
 
-// Disable cut
-quill.root.addEventListener("cut", (e) => {
-  e.preventDefault();
-});
+    // 🔒 Disable cut
+    quill.root.addEventListener("cut", (e) => {
+      e.preventDefault();
+    });
 
-// Disable drag & drop text into editor
-quill.root.addEventListener("drop", (e) => {
-  e.preventDefault();
-});
+    // 🔒 Disable drag & drop text into editor
+    quill.root.addEventListener("drop", (e) => {
+      e.preventDefault();
+    });
 
-// Disable copy/paste/cut via keyboard (Mac + Windows)
-quill.root.addEventListener("keydown", (e) => {
-  if ((e.metaKey || e.ctrlKey) && ["c","v","x","a"].includes(e.key.toLowerCase())) {
-    e.preventDefault();
+    // 🔒 Disable copy/paste/cut/select-all via keyboard (Mac + Windows)
+    quill.root.addEventListener("keydown", (e) => {
+      if ((e.metaKey || e.ctrlKey) && ["c", "v", "x", "a"].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+      }
+    });
   }
-});
+}
     
     function startTimer() {
       timer = setInterval(() => {
