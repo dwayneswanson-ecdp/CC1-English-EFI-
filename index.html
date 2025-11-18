@@ -446,42 +446,27 @@ function enableFullScreen() {
 }
 
 function terminateExam(message) {
-   console.log("💣 terminateExam called", {
+  console.log("💣 terminateExam called", {
     message,
     examActiveBefore: examActive
   });
 
-  // Stop the timer (if any)
+  // Stop timer flags locally
   clearInterval(timer);
-
-  // Show message once
-  alert(message || "Vous avez quitté l'écran de l'épreuve. Vous devez recommencer.");
-
-  // Clear all answers in the form (Part A + hidden fields)
-  if (form) {
-    form.reset();
-  }
-
-  // Clear the Quill editor content (Part B)
-  if (quill) {
-    quill.setText("");  // fully blank
-  }
-
-  // Reset flags
   examActive = false;
   examSubmitted = false;
 
-  // Reset UI: ONLY the login card visible
-  if (exam)      exam.style.display = "none";
-  if (confirmSec) confirmSec.style.display = "none";
-  if (login)     login.style.display = "block";
+  alert(message || "Vous avez quitté l'écran de l'épreuve. Vous devez recommencer.");
 
-  // Re-enable submit button if it was disabled
-  if (submitBtn) {
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Envoyer l'épreuve";
-  }
+  // 🧨 Hard reset everything: reload the page
+  // This will:
+  // - Clear Part A answers
+  // - Clear the Quill editor
+  // - Reset the timer
+  // - Show the landing page again
+  location.reload();
 }
+    
     function randomizeSelectsKeepFirst() {
       document.querySelectorAll("#partA select").forEach(sel => {
         const opts = Array.from(sel.options);
