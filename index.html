@@ -332,17 +332,32 @@ let timer;
     // Track whether the exam is currently active
 let examActive = false;
 
+    // Track whether we are in the brief "starting exam" phase
+let isStartingExam = false;
+
     // If the page becomes hidden (changed tab, changed desktop, other app on top)
 document.addEventListener("visibilitychange", () => {
+  if (isStartingExam) {
+    console.log("⏱ Ignoring visibilitychange during exam startup");
+    return;
+  }
   if (examActive && document.hidden) {
-    terminateExam("Vous avez quitté l'écran de l'épreuve. L'épreuve est terminée et doit être recommencée.");
+    terminateExam(
+      "Vous avez quitté l'écran de l'épreuve. L'épreuve est terminée et doit être recommencée."
+    );
   }
 });
 
 // If the window loses focus (clicked on another window/app)
 window.addEventListener("blur", () => {
+  if (isStartingExam) {
+    console.log("⏱ Ignoring blur during exam startup");
+    return;
+  }
   if (examActive) {
-    terminateExam("Vous avez quitté la fenêtre de l'épreuve. L'épreuve est terminée et doit être recommencée.");
+    terminateExam(
+      "Vous avez quitté la fenêtre de l'épreuve. L'épreuve est terminée et doit être recommencée."
+    );
   }
 });
 
@@ -570,7 +585,7 @@ function randomizeQuestionOrder() {
       partA.classList.add("active");
       partB.classList.remove("active");
 
-      // Mark exam as active
+// Mark exam as active
 examActive = true;
 console.log("✅ Exam started – examActive =", examActive);
 
@@ -581,18 +596,27 @@ if (!examDeadline) {
 
 // If they try to start after the deadline, block it
 if (Date.now() > examDeadline) {
-  alert("Le délai de 40 minutes est écoulé. Vous ne pouvez plus commencer ou reprendre l'épreuve.");
+  alert(
+    "Le délai de 40 minutes est écoulé. Vous ne pouvez plus commencer ou reprendre l'épreuve."
+  );
   examActive = false;
   exam.style.display = "none";
   login.style.display = "block";
   return;
 }
-      
-      // Anti-cheat & timer & shuffle
-      enableFullScreen();
-      startTimer();
-      randomizeQuestionOrder();       // NEW — shuffle the 10 questions
-      randomizeSelectsKeepFirst();    // existing — shuffle dropdown options
+
+// 👉 Ignore blur/visibility for a very short startup window
+isStartingExam = true;
+setTimeout(() => {
+  isStartingExam = false;
+  console.log("⏱ Startup grace period over");
+}, 1200);
+
+// Anti-cheat & timer & shuffle
+enableFullScreen();
+startTimer();
+randomizeQuestionOrder();
+randomizeSelectsKeepFirst();
     }
 
     // ----- Confirm page buttons -----
